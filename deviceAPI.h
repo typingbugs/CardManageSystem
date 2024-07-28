@@ -43,7 +43,10 @@ public:
 
     QString getName()
     {
-        if (connected) return name;
+        if (connected) {
+            if (depositAllowed) return name + QString("（可充值）");
+            else return name + QString("（仅可消费）");
+        }
         else return QString("未指定设备名");
     }
 };

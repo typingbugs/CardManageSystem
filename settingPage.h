@@ -88,13 +88,8 @@ void MainWindow::on_connectDatabaseButton_clicked()
     if (!device.is_connected())
     {
         QMessageBox::warning(this, QString("设备名提示"), QString("该设备名无效，请重试。"));
-        deviceLabel->setText(device.getName());
     }
-    else
-    {
-        if (device.is_depositAllowed()) deviceLabel->setText(device.getName() + QString("（可充值）"));
-        else deviceLabel->setText(device.getName() + QString("（仅可消费）"));
-    }
+    deviceLabel->setText(device.getName());
 }
 
 
