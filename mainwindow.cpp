@@ -33,7 +33,7 @@ MainWindow::MainWindow(QWidget *parent)
     databaseLabel = new QLabel("数据库无连接");
     ui->statusBar->addWidget(databaseLabel);
 
-    deviceLabel = new QLabel(device);
+    deviceLabel = new QLabel(device.getName());
     ui->statusBar->addWidget(deviceLabel);
 
     ui->stackedWidget->setCurrentWidget(ui->settingPage);

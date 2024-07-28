@@ -63,43 +63,38 @@ void MainWindow::on_connectReaderButton_clicked()
 */
 void MainWindow::on_connectDatabaseButton_clicked()
 {
-    databaseIpAddr = ui->ipAddrEdit->text();
-    databasePort = ui->portBox->value();
-    databasePassword = ui->passwordEdit->text();
+    if (db == nullptr)
+    {
+        db = new Database(QSqlDatabase::addDatabase("QMYSQL"), ui->ipAddrEdit->text(), ui->portBox->value(), ui->passwordEdit->text());
+    }
+    else
+    {
+        db->setHostName(ui->ipAddrEdit->text());
+        db->setPort(ui->portBox->value());
+        db->setPassword(ui->passwordEdit->text());
+    }
 
-    db = QSqlDatabase::addDatabase("QMYSQL");
-    db.setHostName(databaseIpAddr);
-    db.setPort(databasePort);
-    db.setPassword(databasePassword);
-    db.setDatabaseName("cardManageSystem");
-    db.setUserName("cardManageSystem");
-
-    if (!db.open())
+    if (!db->open())
     {
         QMessageBox::warning(this, QString("数据库状态提示"), QString("数据库连接失败，请重试。"));
         databaseConnectStatusCheckBox->setChecked(false);
         databaseLabel->setText(QString("数据库未连接"));
-        databaseIpAddr = "";
         return;
     }
     databaseConnectStatusCheckBox->setChecked(true);
-    databaseLabel->setText(QString("数据库已连接：") + databaseIpAddr + QString(":") + QString::number(databasePort));
+    databaseLabel->setText(QString("数据库已连接：") + db->getHostName() + QString(":") + QString::number(db->getPort()));
 
-    device = ui->deviceEdit->text();
-    QSqlQuery query;
-    QString sql = QString("select * from device where id = '%1';").arg(device);
-    query.exec(sql);
-    if (query.next())
+    device.setDevice(ui->deviceEdit->text(), db);
+    if (!device.is_connected())
     {
-        if (query.value(2).toBool()) depositAllowed = true;
-        else depositAllowed = false;
+        QMessageBox::warning(this, QString("设备名提示"), QString("该设备名无效，请重试。"));
+        deviceLabel->setText(device.getName());
     }
     else
     {
-        device = QString("未指定设备名");
-        QMessageBox::warning(this, QString("设备名提示"), QString("该设备名无效，请重试。"));
+        if (device.is_depositAllowed()) deviceLabel->setText(device.getName() + QString("（可充值）"));
+        else deviceLabel->setText(device.getName() + QString("（仅可消费）"));
     }
-    deviceLabel->setText(device);
 }
 
 
@@ -110,7 +105,9 @@ void MainWindow::on_connectDatabaseButton_clicked()
 */
 bool MainWindow::ready()
 {
-    if (!reader.is_connected() || databaseIpAddr.isEmpty()) return false;
+    if (!reader.is_connected()) return false;
+    if (db == nullptr || !db->is_connected()) return false;
+    if (!device.is_connected()) return false;
     return true;
 }
 

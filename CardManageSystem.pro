@@ -14,6 +14,8 @@ SOURCES += \
 
 HEADERS += \
     HF15693.h \
+    databaseAPI.h \
+    deviceAPI.h \
     mainwindow.h \
     newCardPage.h \
     quitAppPage.h \

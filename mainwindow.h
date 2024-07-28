@@ -6,10 +6,11 @@
 #include <QLabel>
 #include <QStackedWidget>
 #include <QMessageBox>
-#include <QSqlDatabase>
 #include <QSqlQuery>
 
 #include <readerAPI.h>
+#include <databaseAPI.h>
+#include <deviceAPI.h>
 
 QT_BEGIN_NAMESPACE
 namespace Ui {
@@ -43,12 +44,8 @@ private slots:
 private:
     Ui::MainWindow *ui;
     Reader reader;
-    QSqlDatabase db;
-    QString databaseIpAddr = "";
-    int databasePort = 3306;
-    QString databasePassword = "";
-    QString device = QString("未指定设备名");
-    bool depositAllowed = false;
+    Database *db = nullptr;
+    Device device;
 
     QStatusBar *statusBar;
     QStackedWidget *stackedWidget;
