@@ -1,6 +1,3 @@
-#ifndef SETTINGPAGE_H
-#define SETTINGPAGE_H
-
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 
@@ -45,7 +42,7 @@ void MainWindow::on_connectReaderButton_clicked()
 {
     int comNumber = ui->comNumberBox->value();
     reader.setComNumber(comNumber);
-    bool connectSuccess = reader.connectReader();
+    bool connectSuccess = reader.connect();
 
     if (!connectSuccess) {
         QString warningMessage = QString("COM") + QString::number(comNumber);
@@ -105,6 +102,3 @@ bool MainWindow::ready()
     if (!device.is_connected()) return false;
     return true;
 }
-
-
-#endif // SETTINGPAGE_H

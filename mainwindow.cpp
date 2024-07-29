@@ -1,8 +1,8 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
-#include "settingPage.h"
-#include "quitAppPage.h"
-#include "newCardPage.h"
+#include "settingPage.cpp"
+#include "quitAppPage.cpp"
+#include "newCardPage.cpp"
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
@@ -36,6 +36,12 @@ MainWindow::MainWindow(QWidget *parent)
     deviceLabel = new QLabel(device.getName());
     ui->statusBar->addWidget(deviceLabel);
 
+
+    // 清空部分输入框
+    ui->userIdBox->clear();
+
+
+    // 设置启动页面
     ui->stackedWidget->setCurrentWidget(ui->settingPage);
 }
 

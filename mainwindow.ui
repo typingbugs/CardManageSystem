@@ -277,7 +277,7 @@
       </property>
       <layout class="QGridLayout" name="gridLayout_2">
        <item row="1" column="1">
-        <widget class="QSpinBox" name="spinBox">
+        <widget class="QSpinBox" name="userIdBox">
          <property name="minimumSize">
           <size>
            <width>200</width>
@@ -289,6 +289,12 @@
            <width>200</width>
            <height>16777215</height>
           </size>
+         </property>
+         <property name="minimum">
+          <number>1000</number>
+         </property>
+         <property name="maximum">
+          <number>99999999</number>
          </property>
         </widget>
        </item>

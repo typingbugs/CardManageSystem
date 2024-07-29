@@ -1,6 +1,3 @@
-#ifndef NEWCARDPAGE_H
-#define NEWCARDPAGE_H
-
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 
@@ -14,7 +11,10 @@ void MainWindow::on_NewCardAction_triggered()
     if (!ready())
     {
         QMessageBox::warning(this, QString("提示"), QString("读卡器或数据库未连接，请设置。"));
-        ui->stackedWidget->setCurrentWidget(ui->settingPage);
+        if (ui->stackedWidget->currentWidget() != ui->settingPage)
+        {
+            ui->stackedWidget->setCurrentWidget(ui->settingPage);
+        }
         return;
     }
 
@@ -28,8 +28,7 @@ void MainWindow::on_NewCardAction_triggered()
 */
 void MainWindow::on_inventoryButton_clicked()
 {
-
+    QStringList cardIdList = reader.inventory(10); // 最多显示10张卡
+    ui->cardIdBox->clear();
+    ui->cardIdBox->addItems(cardIdList);
 }
-
-
-#endif // NEWCARDPAGE_H

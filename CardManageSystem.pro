@@ -9,18 +9,26 @@ CONFIG += c++17
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 SOURCES += \
+    VCD.cpp \
+    VCDOurs.cpp \
+    databaseAPI.cpp \
+    deviceAPI.cpp \
     main.cpp \
-    mainwindow.cpp
+    mainwindow.cpp \
+    newCardPage.cpp \
+    quitAppPage.cpp \
+    readerAPI.cpp \
+    settingPage.cpp
 
 HEADERS += \
     HF15693.h \
+    HLog.h \
+    VCD.h \
+    VCDOurs.h \
     databaseAPI.h \
     deviceAPI.h \
     mainwindow.h \
-    newCardPage.h \
-    quitAppPage.h \
-    readerAPI.h \
-    settingPage.h
+    readerAPI.h
 
 FORMS += \
     mainwindow.ui

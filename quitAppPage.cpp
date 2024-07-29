@@ -1,6 +1,3 @@
-#ifndef QUITAPPPAGE_H
-#define QUITAPPPAGE_H
-
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 
@@ -23,6 +20,3 @@ void MainWindow::on_confirmQuitButton_clicked()
 {
     this->close();
 }
-
-
-#endif // QUITAPPPAGE_H
