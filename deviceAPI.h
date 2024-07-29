@@ -24,6 +24,7 @@ public:
     void setDevice(QString name, Database *db);
 
     QString getName();
+    QString getNameAndDepositAllowed();
 
     bool is_verified();
     bool is_depositAllowed();

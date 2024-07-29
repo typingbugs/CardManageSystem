@@ -43,13 +43,15 @@ bool Device::is_depositAllowed()
 void Device::setDevice(QString name, Database* db)
 {
     QSqlQuery query(db->getDatabase());
-    QString sql = QString("select * from device where `name` = '%1';").arg(name);
-    query.exec(sql);
+    query.prepare(QString("select depositAllowed from device "
+                          "where name = :name;"));
+    query.bindValue(":name", name);
+    query.exec();
     if (query.next())
     {
         verified = true;
         this->name = name;
-        depositAllowed = query.value(2).toBool();
+        depositAllowed = query.value(0).toBool();
     }
     else
     {
@@ -70,11 +72,27 @@ void Device::setDevice(QString name, Database* db)
  * @author  柯劲帆
  * @date    2024-07-28
  */
-QString Device::getName()
+QString Device::getNameAndDepositAllowed()
 {
     if (verified) {
         if (depositAllowed) return name + QString("（可充值）");
         else return name + QString("（仅可消费）");
     }
+    else return QString("未指定设备名");
+}
+
+
+/**
+ * @brief   获取设备名
+ * @param   void
+ * @return  返回QString类name属性
+ *  - 若设备未认证返回"未指定设备名"
+ *  - 若设备已认证返回设备名
+ * @author  柯劲帆
+ * @date    2024-07-29
+ */
+QString Device::getName()
+{
+    if (verified) return name;
     else return QString("未指定设备名");
 }

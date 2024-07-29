@@ -100,7 +100,7 @@ void MainWindow::on_connectDatabaseButton_clicked()
     {
         QMessageBox::warning(this, QString("设备名提示"), QString("该设备名无效，请重试。"));
     }
-    deviceLabel->setText(device.getName());
+    deviceLabel->setText(device.getNameAndDepositAllowed());
 }
 
 

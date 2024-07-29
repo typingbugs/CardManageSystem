@@ -35,12 +35,14 @@ MainWindow::MainWindow(QWidget *parent)
     databaseLabel = new QLabel("数据库无连接");
     ui->statusBar->addWidget(databaseLabel);
 
-    deviceLabel = new QLabel(device.getName());
-    ui->statusBar->addWidget(deviceLabel);
+    deviceLabel = new QLabel(device.getNameAndDepositAllowed());
+    ui->statusBar->addWidget(deviceLabel);    
 
 
     // 清空部分输入框
     ui->userIdBox->clear();
+    userIdFilled = false;
+    connect(ui->userIdBox, &QSpinBox::valueChanged, [this]{ userIdFilled = true; });
 
 
     // 设置启动页面
@@ -52,4 +54,3 @@ MainWindow::~MainWindow()
 {
     delete ui;
 }
-

@@ -7,6 +7,7 @@
 #include <QStackedWidget>
 #include <QMessageBox>
 #include <QSqlQuery>
+#include <QInputDialog>
 
 #include <readerAPI.h>
 #include <databaseAPI.h>
@@ -28,6 +29,12 @@ public:
 
     void updateStatusBarComNumber();
     bool ready();
+    bool bindUserWithCard(int userId, QString cardId, QString &info);
+    bool getNewUserInfo(QString &username, QString &password, QString &info);
+    bool createUser(int userId, QString &info);
+    bool verifyUser(int userId, QString prompt, QString &info);
+    bool transferCard(int userId, QString newCardId, QString oldCardId, QString &info);
+    bool reopenCard(QString cardId, QString &info);
 
 private slots:
     void on_settingAction_triggered();
@@ -38,6 +45,7 @@ private slots:
     void on_confirmQuitButton_clicked();
     void on_connectDatabaseButton_clicked();
     void on_inventoryButton_clicked();
+    void on_newCardButton_clicked();
 
 private:
     Ui::MainWindow *ui;
@@ -53,5 +61,7 @@ private:
     QCheckBox *databaseConnectStatusCheckBox;
     QLabel *databaseLabel;
     QLabel *deviceLabel;
+
+    bool userIdFilled;  ///< 初始时学/工号填写框被清空，该变量为false；当用户填写后该变量为true
 };
 #endif // MAINWINDOW_H
