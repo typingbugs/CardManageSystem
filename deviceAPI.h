@@ -5,18 +5,28 @@
 #include <QSqlQuery>
 #include <databaseAPI.h>
 
+
+/**
+ * @class   Device
+ * @brief   设备名相关接口类
+ *  控制本应用中设备名相关变量。
+ * @author  柯劲帆
+ * @date    2024-07-28
+ */
 class Device
 {
 private:
-    bool connected = false;
+    bool verified = false;
     bool depositAllowed = false;
     QString name = QString("未指定设备名");
 
 public:
-    bool is_connected();
-    bool is_depositAllowed();
     void setDevice(QString name, Database *db);
+
     QString getName();
+
+    bool is_verified();
+    bool is_depositAllowed();
 };
 
 #endif // DEVICEAPI_H

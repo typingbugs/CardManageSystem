@@ -1,8 +1,10 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
+
 #include "settingPage.cpp"
 #include "quitAppPage.cpp"
 #include "newCardPage.cpp"
+
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)

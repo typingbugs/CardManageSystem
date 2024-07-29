@@ -2,21 +2,27 @@
 #include "ui_mainwindow.h"
 
 
-/*
- * 功能：切换到设置页面
- * 触发：点击工具栏的“设置”
-*/
+/**
+ * @brief   切换到设置页面
+ *  点击工具栏的“设置”触发。
+ * @param   void
+ * @return  void
+ * @author  柯劲帆
+ * @date    2024-07-27
+ */
 void MainWindow::on_settingAction_triggered()
 {
     ui->stackedWidget->setCurrentWidget(ui->settingPage);
 }
 
 
-/*
- * 功能：设置连接的读卡器的COM口号并更新状态栏的相应内容
- * 输入：要设置的COM口号
- * 返回：无
-*/
+/**
+ * @brief   更新状态栏的COM口号相关内容
+ * @param   void
+ * @return  void
+ * @author  柯劲帆
+ * @date    2024-07-27
+ */
 void MainWindow::updateStatusBarComNumber()
 {
     if (reader.is_connected())
@@ -34,10 +40,14 @@ void MainWindow::updateStatusBarComNumber()
 }
 
 
-/*
- * 功能：连接读卡器
- * 触发：在设置页面的连接读卡器部分点击“连接”按钮
-*/
+/**
+ * @brief   连接读卡器
+ *  在连接读卡器部分点击“连接”按钮触发。
+ * @param   void
+ * @return  void
+ * @author  柯劲帆
+ * @date    2024-07-27
+ */
 void MainWindow::on_connectReaderButton_clicked()
 {
     int comNumber = ui->comNumberBox->value();
@@ -54,10 +64,14 @@ void MainWindow::on_connectReaderButton_clicked()
 }
 
 
-/*
- * 功能：连接数据库并检查设备名
- * 触发：在设置页面的连接数据库部分点击“连接”按钮
-*/
+/**
+ * @brief   连接数据库并检查设备名
+ *  在连接数据库部分点击“连接”按钮触发。
+ * @param   void
+ * @return  void
+ * @author  柯劲帆
+ * @date    2024-07-27
+ */
 void MainWindow::on_connectDatabaseButton_clicked()
 {
     if (db == nullptr)
@@ -82,7 +96,7 @@ void MainWindow::on_connectDatabaseButton_clicked()
     databaseLabel->setText(QString("数据库已连接：") + db->getHostName() + QString(":") + QString::number(db->getPort()));
 
     device.setDevice(ui->deviceEdit->text(), db);
-    if (!device.is_connected())
+    if (!device.is_verified())
     {
         QMessageBox::warning(this, QString("设备名提示"), QString("该设备名无效，请重试。"));
     }
@@ -90,15 +104,19 @@ void MainWindow::on_connectDatabaseButton_clicked()
 }
 
 
-/*
- * 功能：检查读卡器和数据库是否准备好
- * 输入：无
- * 返回：true - 已准备好 | false - 未准备好
-*/
+/**
+ * @brief   检查读卡器和数据库是否准备好
+ * @param   void
+ * @return  读卡器和数据库状态
+ *  - true  已准备好
+ *  - false 未准备好
+ * @author  柯劲帆
+ * @date    2024-07-27
+ */
 bool MainWindow::ready()
 {
     if (!reader.is_connected()) return false;
     if (db == nullptr || !db->is_connected()) return false;
-    if (!device.is_connected()) return false;
+    if (!device.is_verified()) return false;
     return true;
 }

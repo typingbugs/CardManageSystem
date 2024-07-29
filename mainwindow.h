@@ -39,8 +39,6 @@ private slots:
     void on_connectDatabaseButton_clicked();
     void on_inventoryButton_clicked();
 
-
-
 private:
     Ui::MainWindow *ui;
     Reader reader;
