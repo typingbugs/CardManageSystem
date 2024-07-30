@@ -33,7 +33,7 @@ bool Device::is_depositAllowed()
 
 /**
  * @brief   设置并认证设备
- *  认证设备会更新设备名和充值权限。
+ *  认证设备会更新设备名、充值权限和设备ID。
  * @param   name    设备名
  * @param   db  数据库
  * @return  void
@@ -43,7 +43,7 @@ bool Device::is_depositAllowed()
 void Device::setDevice(QString name, Database* db)
 {
     QSqlQuery query(db->getDatabase());
-    query.prepare(QString("select depositAllowed from device "
+    query.prepare(QString("select id, depositAllowed from device "
                           "where name = :name;"));
     query.bindValue(":name", name);
     query.exec();
@@ -51,12 +51,14 @@ void Device::setDevice(QString name, Database* db)
     {
         verified = true;
         this->name = name;
-        depositAllowed = query.value(0).toBool();
+        depositAllowed = query.value("depositAllowed").toBool();
+        id = query.value("id").toInt();
     }
     else
     {
         verified = false;
         depositAllowed = false;
+        id = -1;
     }
 }
 
@@ -64,7 +66,7 @@ void Device::setDevice(QString name, Database* db)
 /**
  * @brief   获取设备名及其充值权限
  * @param   void
- * @return  返回QString类name属性
+ * @return  QString 设备名及其充值权限
  *  - 若设备未认证返回"未指定设备名"
  *  - 若设备已认证
  *      - 若设备可充值，返回设备名加"（可充值）"
@@ -85,9 +87,9 @@ QString Device::getNameAndDepositAllowed()
 /**
  * @brief   获取设备名
  * @param   void
- * @return  返回QString类name属性
- *  - 若设备未认证返回"未指定设备名"
- *  - 若设备已认证返回设备名
+ * @return  QString 设备名（name属性）
+ * - 若设备未认证返回"未指定设备名"
+ * - 若设备已认证返回设备名
  * @author  柯劲帆
  * @date    2024-07-29
  */
@@ -95,4 +97,20 @@ QString Device::getName()
 {
     if (verified) return name;
     else return QString("未指定设备名");
+}
+
+
+/**
+ * @brief   获取设备ID
+ * @param   void
+ * @return  int 设备ID
+ * - 若设备未认证返回-1
+ * - 若设备已认证返回设备ID
+ * @author  柯劲帆
+ * @date    2024-07-30
+ */
+int Device::getId()
+{
+    if (verified) return id;
+    else return -1;
 }

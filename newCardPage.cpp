@@ -42,7 +42,7 @@ void MainWindow::on_inventoryButton_clicked()
     ui->cardIdBox->clear();
     if (cardIdList.empty())
     {
-        QMessageBox::warning(this, "查询卡结果", "未发现卡片，请将卡片放置于读卡器上方。");
+        QMessageBox::warning(this, "提示", "未发现卡片，请将卡片放置于读卡器上方。");
     }
     else
     {

@@ -11,7 +11,9 @@ CONFIG += c++17
 SOURCES += \
     VCD.cpp \
     VCDOurs.cpp \
+    consumePage.cpp \
     databaseAPI.cpp \
+    depositPage.cpp \
     deviceAPI.cpp \
     main.cpp \
     mainwindow.cpp \

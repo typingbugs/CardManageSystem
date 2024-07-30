@@ -19,12 +19,14 @@ private:
     bool verified = false;
     bool depositAllowed = false;
     QString name = QString("未指定设备名");
+    int id = -1;
 
 public:
     void setDevice(QString name, Database *db);
 
     QString getName();
     QString getNameAndDepositAllowed();
+    int getId();
 
     bool is_verified();
     bool is_depositAllowed();

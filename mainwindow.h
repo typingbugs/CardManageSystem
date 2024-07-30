@@ -8,6 +8,8 @@
 #include <QMessageBox>
 #include <QSqlQuery>
 #include <QInputDialog>
+#include <QDateTime>
+#include <QRandomGenerator>
 
 #include <readerAPI.h>
 #include <databaseAPI.h>
@@ -36,12 +38,15 @@ public:
     bool verifyUser(int userId, QString prompt, QString &info);
     bool transferCard(int userId, QString newCardId, QString oldCardId, QString &info);
     bool reopenCard(QString cardId, QString &info);
+    bool topUpCard(QString cardId, double topUpValue, double &originalBalance, double &finalBalance, QString &recordId, QString &info);
+    QString getRecordId(QDateTime currentTime, int userId, int recordType);
 
 private slots:
     void on_settingAction_triggered();
     void on_quitAppAction_triggered();
     void on_NewCardAction_triggered();
     void on_reportLossAction_triggered();
+    void on_depositAction_triggered();
 
     void on_connectReaderButton_clicked();
     void on_confirmQuitButton_clicked();
@@ -49,6 +54,14 @@ private slots:
     void on_inventoryButton_clicked();
     void on_newCardButton_clicked();
     void on_reportLossButton_clicked();
+    void on_depositInventoryButton_clicked();
+    void on_depositByCardIdButton_clicked();
+
+    void on_depositByUserIdButton_clicked();
+
+    void on_consumeInventoryButton_clicked();
+
+    void on_ConsumptionAction_triggered();
 
 private:
     Ui::MainWindow *ui;
@@ -67,5 +80,6 @@ private:
 
     bool newCardUserIdFilled;  ///< 开卡时：初始时学/工号填写框被清空，该变量为false；当用户填写后该变量为true
     bool reportLossUserIdFilled;  ///< 挂失时：初始时学/工号填写框被清空，该变量为false；当用户填写后该变量为true
+    bool depositUserIdFilled;  ///< 充值时：初始时学/工号填写框被清空，该变量为false；当用户填写后该变量为true
 };
 #endif // MAINWINDOW_H

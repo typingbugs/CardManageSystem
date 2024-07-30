@@ -5,6 +5,8 @@
 #include "quitAppPage.cpp"
 #include "newCardPage.cpp"
 #include "reportLossPage.cpp"
+#include "depositPage.cpp"
+#include "consumePage.cpp"
 
 
 MainWindow::MainWindow(QWidget *parent)
@@ -44,9 +46,12 @@ MainWindow::MainWindow(QWidget *parent)
     ui->userIdBox->clear();
     newCardUserIdFilled = false;
     connect(ui->userIdBox, &QSpinBox::valueChanged, [this]{ newCardUserIdFilled = true; });
+
     ui->reportLossUserIdBox->clear();
     reportLossUserIdFilled = false;
     connect(ui->reportLossUserIdBox, &QSpinBox::valueChanged, [this]{ reportLossUserIdFilled = true; });
+
+    connect(ui->depositUserIdBox, &QSpinBox::valueChanged, [this]{ depositUserIdFilled = true; });
 
 
     // 设置启动页面
@@ -58,4 +63,3 @@ MainWindow::~MainWindow()
 {
     delete ui;
 }
-
