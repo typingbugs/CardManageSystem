@@ -243,7 +243,7 @@ bool MainWindow::deductCard(QString cardId, double deductValue, double &original
     }
 
     QDateTime currentTime = QDateTime::currentDateTime();
-    recordId = getRecordId(currentTime, userId, 1);
+    recordId = getRecordId(currentTime, userId, 0);
 
     query.finish();
     query.prepare(QString("call sp_consumeCard (:cardId, :value, :recordId, :device, :time, :type, @newBalance);"));
@@ -252,7 +252,7 @@ bool MainWindow::deductCard(QString cardId, double deductValue, double &original
     query.bindValue(":recordId", recordId);
     query.bindValue(":device", device.getId());
     query.bindValue(":time", currentTime.toString("yyyy-MM-dd hh:mm:ss"));
-    query.bindValue(":type", 1);
+    query.bindValue(":type", 0);
     success = query.exec();
     if (!success)
     {
