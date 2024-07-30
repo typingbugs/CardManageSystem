@@ -40,6 +40,7 @@ public:
     bool reopenCard(QString cardId, QString &info);
     bool topUpCard(QString cardId, double topUpValue, double &originalBalance, double &finalBalance, QString &recordId, QString &info);
     QString getRecordId(QDateTime currentTime, int userId, int recordType);
+    bool deductCard(QString cardId, double deductValue, double &originalBalance, double &finalBalance, QString &recordId, QString &info);
 
 private slots:
     void on_settingAction_triggered();
@@ -47,6 +48,7 @@ private slots:
     void on_NewCardAction_triggered();
     void on_reportLossAction_triggered();
     void on_depositAction_triggered();
+    void on_ConsumptionAction_triggered();
 
     void on_connectReaderButton_clicked();
     void on_confirmQuitButton_clicked();
@@ -56,12 +58,9 @@ private slots:
     void on_reportLossButton_clicked();
     void on_depositInventoryButton_clicked();
     void on_depositByCardIdButton_clicked();
-
     void on_depositByUserIdButton_clicked();
-
     void on_consumeInventoryButton_clicked();
-
-    void on_ConsumptionAction_triggered();
+    void on_consumeButton_clicked();
 
 private:
     Ui::MainWindow *ui;
