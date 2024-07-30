@@ -18,6 +18,7 @@ SOURCES += \
     newCardPage.cpp \
     quitAppPage.cpp \
     readerAPI.cpp \
+    reportLossPage.cpp \
     settingPage.cpp
 
 HEADERS += \

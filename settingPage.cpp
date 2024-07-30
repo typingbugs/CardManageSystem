@@ -113,9 +113,26 @@ void MainWindow::on_connectDatabaseButton_clicked()
  * @author  柯劲帆
  * @date    2024-07-27
  */
-bool MainWindow::ready()
+bool MainWindow::allReady()
 {
     if (!reader.is_connected()) return false;
+    if (db == nullptr || !db->is_connected()) return false;
+    if (!device.is_verified()) return false;
+    return true;
+}
+
+
+/**
+ * @brief   检查数据库和设备名是否准备好
+ * @param   void
+ * @return  数据库状态和设备名设置状态
+ *  - true  已准备好
+ *  - false 未准备好
+ * @author  柯劲帆
+ * @date    2024-07-30
+ */
+bool MainWindow::softwareReady()
+{
     if (db == nullptr || !db->is_connected()) return false;
     if (!device.is_verified()) return false;
     return true;

@@ -28,7 +28,8 @@ public:
     ~MainWindow();
 
     void updateStatusBarComNumber();
-    bool ready();
+    bool allReady();
+    bool softwareReady();
     bool bindUserWithCard(int userId, QString cardId, QString &info);
     bool getNewUserInfo(QString &username, QString &password, QString &info);
     bool createUser(int userId, QString &info);
@@ -40,12 +41,14 @@ private slots:
     void on_settingAction_triggered();
     void on_quitAppAction_triggered();
     void on_NewCardAction_triggered();
+    void on_reportLossAction_triggered();
 
     void on_connectReaderButton_clicked();
     void on_confirmQuitButton_clicked();
     void on_connectDatabaseButton_clicked();
     void on_inventoryButton_clicked();
     void on_newCardButton_clicked();
+    void on_reportLossButton_clicked();
 
 private:
     Ui::MainWindow *ui;
@@ -62,6 +65,7 @@ private:
     QLabel *databaseLabel;
     QLabel *deviceLabel;
 
-    bool userIdFilled;  ///< 初始时学/工号填写框被清空，该变量为false；当用户填写后该变量为true
+    bool newCardUserIdFilled;  ///< 开卡时：初始时学/工号填写框被清空，该变量为false；当用户填写后该变量为true
+    bool reportLossUserIdFilled;  ///< 挂失时：初始时学/工号填写框被清空，该变量为false；当用户填写后该变量为true
 };
 #endif // MAINWINDOW_H

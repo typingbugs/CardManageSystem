@@ -4,9 +4,7 @@
 
 /**
  * @brief   切换到开卡页面
- *  点击工具栏的“开卡”触发：
- *  - 如果读卡器或数据库未连接，显示警告信息并跳转到设置页面。
- *  - 如果连接已准备好，则切换到开卡页面。
+ *  点击工具栏的“开卡”触发，切换到开卡页面。
  * @param   void
  * @return  void
  * @author  柯劲帆
@@ -14,23 +12,15 @@
  */
 void MainWindow::on_NewCardAction_triggered()
 {
-    if (!ready())
-    {
-        QMessageBox::warning(this, QString("提示"), QString("读卡器或数据库未连接，请设置。"));
-        if (ui->stackedWidget->currentWidget() != ui->settingPage)
-        {
-            ui->stackedWidget->setCurrentWidget(ui->settingPage);
-        }
-        return;
-    }
-
     ui->stackedWidget->setCurrentWidget(ui->newCardPage);
 }
 
 
 /**
  * @brief   读卡器扫描卡片
- *  点击开卡页面的“查询”触发。显示Inventory的查询结果，最多显示10张卡。
+ *  点击开卡页面的“查询”触发。
+ *  如果读卡器未连接，显示警告信息并跳转到设置页面。
+ *  显示Inventory的查询结果，最多显示10张卡。
  * @param   void
  * @return  void
  * @author  柯劲帆
@@ -38,6 +28,16 @@ void MainWindow::on_NewCardAction_triggered()
  */
 void MainWindow::on_inventoryButton_clicked()
 {
+    if (!reader.is_connected())
+    {
+        QMessageBox::warning(this, QString("提示"), QString("读卡器未连接，请设置。"));
+        if (ui->stackedWidget->currentWidget() != ui->settingPage)
+        {
+            ui->stackedWidget->setCurrentWidget(ui->settingPage);
+        }
+        return;
+    }
+
     QStringList cardIdList = reader.inventory(10);  // 最多显示10张卡
     ui->cardIdBox->clear();
     if (cardIdList.empty())
@@ -54,10 +54,12 @@ void MainWindow::on_inventoryButton_clicked()
 
 /**
  * @brief   开卡
+ * 如果数据库未连接，显示警告信息并跳转到设置页面。
  * 该函数在用户点击“确认”按钮时触发，用于处理新卡片的注册和绑定操作。
  * 函数首先检查是否选择了卡片和填写了用户ID，然后进行各种验证和数据库操作，确保卡片和用户的状态正确。
  * 如果所有操作成功，最终将新卡片和用户绑定。
  * @details
+ * 如果数据库未连接，显示警告信息并跳转到设置页面。
  * 函数首先从用户界面中获取选择的卡片ID和填写的用户ID，并进行非空检查。
  * 如果未选择卡片或未填写用户ID，则弹出警告对话框并退出函数。
  * 然后，函数会查询数据库，验证卡片和用户的状态，并根据不同情况进行相应处理：
@@ -73,13 +75,23 @@ void MainWindow::on_inventoryButton_clicked()
  */
 void MainWindow::on_newCardButton_clicked()
 {
+    if (!softwareReady())
+    {
+        QMessageBox::warning(this, QString("提示"), QString("数据库未连接，请设置。"));
+        if (ui->stackedWidget->currentWidget() != ui->settingPage)
+        {
+            ui->stackedWidget->setCurrentWidget(ui->settingPage);
+        }
+        return;
+    }
+
     if (ui->cardIdBox->currentIndex() == -1)
     {
         QMessageBox::warning(this, "提示", "请放置卡片并点击查询按钮。");
         return;
     }
 
-    if (!userIdFilled)
+    if (!newCardUserIdFilled)
     {
         QMessageBox::warning(this, "提示", "请填写学/工号。");
         return;
