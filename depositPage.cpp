@@ -124,6 +124,7 @@ void MainWindow::on_depositByCardIdButton_clicked()
     depositResultMessage += QString("充值设备：") + device.getName() + QString("\n");
     depositResultMessage += QString("交易记录号：") + recordId + QString("\n");
     QMessageBox::information(this, "充值成功", depositResultMessage);
+    ui->depositValueBox->setValue(0.00);
     return;
 }
 
