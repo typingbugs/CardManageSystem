@@ -1,4 +1,5 @@
 #include "readerAPI.h"
+#include "qdebug.h"
 
 
 /**
@@ -29,7 +30,7 @@ bool Reader::is_connected()
  */
 bool Reader::connect()
 {
-    if (CVCDOurs::connectReaderByCOM(comNumber))
+    if (connectReaderByCOM(comNumber))
     {
         return true;
     }
@@ -38,6 +39,19 @@ bool Reader::connect()
         comNumber = -1;
         return false;
     }
+}
+
+
+/**
+ * @brief   关闭连接
+ * @param   void
+ * @return  void
+ * @author  柯劲帆
+ * @date    2024-07-31
+ */
+void Reader::disconnect()
+{
+    disconnectReaderByCOM();
 }
 
 
@@ -131,14 +145,13 @@ bool Reader::readRecordNumber(int &recordNum, int &recordIndex, QString cardId)
     uchar_t recordIndexHex[4] = {0};    // 一个block有4个byte，1个byte有两个hex，会返回8个hex存在4个uchar_t中
 
     uchar_t cardIdHex[8] = {0};
-    QByteArray ba = cardId.toLatin1();
-    StringToHex(ba.data(), cardIdHex);
+    StringToHex(cardId.toLatin1().data(), cardIdHex);
 
-    int hexNum = readBlocks(0, 1, recordIndexHex, nullptr, cardIdHex);
+    int hexNum = readSingleBlock(cardIdHex, 0, 0, recordIndexHex, nullptr);
     if (hexNum == 0) return false;
 
     recordNum = (int)(recordIndexHex[0] & 0x0F);
-    recordIndex = (int)(recordIndexHex[1] >> 4);
+    recordIndex = (int)(recordIndexHex[0] >> 4);
 
     return true;
 }
@@ -171,10 +184,9 @@ bool Reader::writeRecordNumber(int recordNum, int recordIndex, QString cardId)
     recordIndexStr[0] += (uchar_t)(recordNum);
 
     uchar_t cardIdHex[8] = {0};
-    QByteArray ba = cardId.toLatin1();
-    StringToHex(ba.data(), cardIdHex);
+    StringToHex(cardId.toLatin1().data(), cardIdHex);
 
-    int success = writeBlock(0, recordIndexStr, cardIdHex);
+    int success = writeSingleBlock(cardIdHex, 0, 4, recordIndexStr);
     return success == 1;
 }
 
@@ -207,14 +219,12 @@ bool Reader::insertRecord(QString record, QString cardId)
     int blockIndex = 1 + 4 * recordIndex;
 
     uchar_t cardIdHex[8] = {0};
-    QByteArray ba = cardId.toLatin1();
-    StringToHex(ba.data(), cardIdHex);
+    StringToHex(cardId.toLatin1().data(), cardIdHex);
 
     uchar_t recordHex[4 * 4] = {0};
-    ba = record.toLatin1();
-    StringToHex(ba.data(), recordHex);
+    StringToHex(record.toLatin1().data(), recordHex);
 
-    int writeLineNumber = writeBlocks(blockIndex, 4, recordHex, cardIdHex);
+    int writeLineNumber = writeMultipleBlocks(cardIdHex, blockIndex, 4, 4, recordHex);
 
     return writeLineNumber != 0;
 }
@@ -234,7 +244,7 @@ bool Reader::insertRecord(QString record, QString cardId)
  * @author  柯劲帆
  * @date    2024-07-31
  */
-QStringList Reader::getRecords(QString cardId, bool &ok)
+QStringList Reader::readAllRecords(QString cardId, bool &ok)
 {
     QStringList recordList;
 
@@ -247,37 +257,43 @@ QStringList Reader::getRecords(QString cardId, bool &ok)
     }
 
     uchar_t cardIdHex[8] = {0};
-    QByteArray ba = cardId.toLatin1();
-    StringToHex(ba.data(), cardIdHex);
+    StringToHex(cardId.toLatin1().data(), cardIdHex);
 
     for (int i = 0; i < recordNum; i++)
     {
-        QString recordStr = "";
-        int recordIndex = 1 + 4 * ((recordStartIndex + i) % maxRecordNum);
-        for (int j = 0; j < 4; j++)
+        StringToHex(cardId.toLatin1().data(), cardIdHex);   // readMultipleBlocks不知为何会改变cardIdHex的值，要重新赋值
+        int recordBlockIndex = 1 + 4 * ((recordStartIndex + i) % maxRecordNum);
+        uchar_t recordHex[4 * 4] = {0};
+        int hexNum = readMultipleBlocks(cardIdHex, 0, recordBlockIndex, 4, recordHex, nullptr);
+        if (hexNum == 0)
         {
-            uchar_t blockHex[4] = {0};    // 一个block有4个byte，1个byte有两个hex，会返回8个hex存在4个uchar_t中
-            int hexNum = readBlocks(recordIndex + j, 1, blockHex, nullptr, cardIdHex);
-            if (hexNum == 0)
-            {
-                ok = false;
-                return recordList;
-            }
+            // 原来的处理代码
+            // ok = false;
+            // return recordList;
 
-            char blockStr[9] = {0};
-            HexToString(blockHex, 4, blockStr);
-
-            recordStr += QString(blockStr);
+            // 这里经常出现hexNum == 0，循环终止的情况，原因是返回的reply为空值: “[]”
+            // 一旦出现[]，后面的值大概率会出错。
+            // 出现主要集中在第二遍循环时。
+            // 尝试解决方案：每一遍循环重新inventory重置一下环境（怀疑某些变量被改了）、每一遍循环睡眠2秒，都没有解决这个问题
+            // 因此在发生错误时，直接返回能够正确读取的记录ID。
+            break;
         }
-        recordList.push_back(recordStr);
+
+        char recordStr[33] = {0};
+        HexToString(recordHex, 4 * 4, recordStr);
+        recordStr[30] = '\0';
+        QString qRecordStr = QString(recordStr).toUpper();
+
+        recordList.push_back(qRecordStr);
     }
+    ok = true;
     return recordList;
 }
 
 
 /**
  * @brief   卡初始化
- * 将第1个block初始化为全0。
+ * 将第1个block的记录数量设置为0，最近一条交易记录下标设置为maxRecordNum-1。
  * @param   cardId  要初始化的卡片ID，类型为 QString
  * @return  bool    是否初始化成功
  * - true   初始化成功
@@ -292,10 +308,10 @@ QStringList Reader::getRecords(QString cardId, bool &ok)
 bool Reader::initCard(QString cardId)
 {
     uchar_t cardIdHex[8] = {0};
-    QByteArray ba = cardId.toLatin1();
-    StringToHex(ba.data(), cardIdHex);
+    StringToHex(cardId.toLatin1().data(), cardIdHex);
 
-    uchar_t allZeroHex[4] = {0};
-    int writeLineNumber = writeBlock(0, allZeroHex, cardIdHex);
+    uchar_t initHex[4] = {0};
+    initHex[0] = (char)(maxRecordNum - 1) << 4;
+    int writeLineNumber = writeSingleBlock(cardIdHex, 0, 4, initHex);
     return writeLineNumber != 0;
 }

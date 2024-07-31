@@ -71,6 +71,7 @@ private slots:
     void on_queryInventoryButton_clicked();
     void on_userRecordQueryButton_clicked();
     void on_userIdRecordQueryButton_clicked();
+    void on_cardRecordQueryButton_clicked();
 
 private:
     Ui::MainWindow *ui;

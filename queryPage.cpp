@@ -284,6 +284,136 @@ void MainWindow::on_userIdRecordQueryButton_clicked()
 
 
 /**
+ * @brief   查询卡内记录
+ * @param   void
+ * @return  void
+ * @author  柯劲帆
+ * @date    2024-07-31
+ */
+void MainWindow::on_cardRecordQueryButton_clicked()
+{
+    if (!databaseReady())
+    {
+        QMessageBox::warning(this, QString("提示"), QString("数据库未连接，请设置。"));
+        if (ui->stackedWidget->currentWidget() != ui->settingPage)
+        {
+            ui->stackedWidget->setCurrentWidget(ui->settingPage);
+        }
+        return;
+    }
+
+    if (ui->queryCardIdBox->currentIndex() == -1)
+    {
+        QMessageBox::warning(this, "提示", "请放置卡片并点击查询按钮。");
+        return;
+    }
+    QString cardId = ui->queryCardIdBox->currentText();
+    int cardStatus;
+    double balance;
+
+    // 检查和获取绑定用户
+    QSqlQuery query(db->getDatabase());
+    query.prepare(QString("select userId, `status`, balance from card "
+                          "where id = :cardId;"));
+    query.bindValue(":cardId", cardId);
+    bool success = false;
+    success = query.exec();
+    if (!success)
+    {
+        QMessageBox::warning(this, QString("提示"), QString("数据库异常。查询失败。"));
+        queryPageInitContent();
+        return;
+    }
+    if (query.next())  // 卡已被注册，获取用户ID
+    {
+        cardStatus = query.value("status").toInt();
+        if (cardStatus == 0)
+        {
+            QMessageBox::warning(this, QString("提示"), QString("此卡未被启用。"));
+            queryPageInitContent();
+            return;
+        }
+        if (cardStatus == -1)
+        {
+            ui->queryCardStatusLabel->setText(QString("已被挂失"));
+        }
+        balance = query.value("balance").toDouble();
+        ui->queryBalanceShowEdit->setText(QString::number(balance, 'f', 2));
+    }
+    else    // 卡没有注册
+    {
+        query.finish();
+        query.prepare(QString("insert into card "
+                              "values (:cardId, 0, 0.0, null);"));
+        query.bindValue(":cardId", cardId);
+        success = query.exec();
+        if (!success)
+        {
+            QMessageBox::warning(this, QString("提示"), QString("数据库异常。查询失败。"));
+            queryPageInitContent();
+            return;
+        }
+
+        QMessageBox::warning(this, QString("提示"), QString("此卡未被启用。"));
+        queryPageInitContent();
+        return;
+    }
+
+    QStringList cardRecordIdList = reader.readAllRecords(cardId, success);
+    if (!success)
+    {
+        QMessageBox::warning(this, QString("提示"), QString("读卡器异常。查询失败。"));
+        queryPageInitContent();
+        return;
+    }
+
+    query.finish();
+    query.prepare(QString("select time, type, value, balance, device, id from record_view "
+                          "where cardId = :cardId and id = :recordId;"));
+    query.bindValue(":cardId", cardId);
+
+
+    std::vector<QStringList> transactionRecordList;
+    for (int i = 0; i < cardRecordIdList.size(); i++)
+    {
+        QString recordId = cardRecordIdList[i];
+
+        query.bindValue(":recordId", recordId);
+        success = query.exec();
+        if (!success)
+        {
+            QMessageBox::warning(this, QString("提示"), QString("数据库异常。查询失败。"));
+            queryPageInitContent();
+            return;
+        }
+        if (!query.next()) {
+            // 原来的代码
+            // QMessageBox::warning(this, QString("提示"), QString("数据库异常。查询失败。"));
+            // queryPageInitContent();
+            // return;
+
+            // 这里本来应该报错退出，但是读卡器经常发疯，见Reader::readAllRecords(QString cardId, bool &ok)
+            // 所以发现有不在数据库中的记录号，直接跳过
+            continue;
+        }
+
+        QStringList transactionRecord = transactionRecord2QStringList
+        (
+            query.value("time").toDateTime(),
+            query.value("type").toInt(),
+            query.value("value").toDouble(),
+            query.value("balance").toDouble(),
+            query.value("device").toString(),
+            query.value("id").toString()
+        );
+        transactionRecordList.push_back(transactionRecord);
+    }
+
+    displayInTableWidget(transactionRecordList);
+}
+
+
+/**
  * @brief   将数据库查询返回的数据转化为QStringList
  * 该函数用于将数据库查询返回的交易记录数据转换为一个 `QStringList`，以便在界面上显示。
  * @param   time    交易时间，类型为 QDateTime
@@ -374,4 +504,3 @@ void MainWindow::displayInTableWidget(std::vector<QStringList> transactionRecord
         }
     }
 }
-

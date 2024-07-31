@@ -247,7 +247,7 @@ void MainWindow::on_newCardButton_clicked()
             }
             else if (userCardStatus == -1)  // 用户有挂失卡，需要移资
             {
-                /// @todo 弹出验证用户界面，要求用户输入密码；在数据库中将挂失卡的信息和消费记录移到新卡
+                // 弹出验证用户界面，要求用户输入密码；在数据库中将挂失卡的信息和消费记录移到新卡
                 QString info, prompt = QString("如需将挂失卡移资到本卡，请输入密码。");
                 bool success = verifyUser(userId, prompt, info);
                 if (!success)
@@ -332,8 +332,6 @@ bool MainWindow::bindUserWithCard(int userId, QString cardId, QString &info)
         info = QString("数据库异常。");
         return false;
     }
-
-    /// @todo 写卡
 
     return true;
 }
@@ -570,8 +568,6 @@ bool MainWindow::transferCard(int userId, QString newCardId, QString oldCardId, 
         return false;
     }
 
-    /// @todo 将数据库上的记录写到新卡上
-
     return true;
 }
 
@@ -605,8 +601,6 @@ bool MainWindow::reopenCard(QString cardId, QString &info)
         info = QString("数据库异常。");
         return false;
     }
-
-    /// @todo 看看是否有写卡需求
 
     return true;
 }

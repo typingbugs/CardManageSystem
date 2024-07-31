@@ -18,7 +18,8 @@ void MainWindow::on_quitAppAction_triggered()
 
 /**
  * @brief   退出程序
- *  在退出页面点击“确认”按钮触发
+ * 在退出页面点击“确认”按钮触发
+ * 关闭读卡器连接，销毁数据库对象（内部关闭数据库连接）
  * @param   void
  * @return  void
  * @author  柯劲帆
@@ -26,5 +27,7 @@ void MainWindow::on_quitAppAction_triggered()
  */
 void MainWindow::on_confirmQuitButton_clicked()
 {
+    if (reader.is_connected()) reader.disconnect();
+    free(db);
     this->close();
 }

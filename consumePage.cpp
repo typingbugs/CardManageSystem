@@ -172,6 +172,12 @@ void MainWindow::on_consumeButton_clicked()
         return;
     }
 
+    success = reader.insertRecord(recordId, cardId);
+    if (!success)
+    {
+        QMessageBox::warning(this, "提示", "消费完成。写卡失败。本交易不记录在卡上。");
+    }
+
     QString consumeResultMessage = QString("消费成功：") + QString::number(deductValue) + QString("元\n");
     consumeResultMessage += QString("原余额：") + QString::number(originalBalance) + QString("元\n");
     consumeResultMessage += QString("消费后余额：") + QString::number(finalBalance) + QString("元\n");
@@ -262,8 +268,6 @@ bool MainWindow::deductCard(QString cardId, double deductValue, double &original
     query.exec("select @newBalance;");
     query.next();
     finalBalance = query.value("@newBalance").toDouble();
-
-    /// @todo 写卡
 
     return true;
 }

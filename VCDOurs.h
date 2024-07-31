@@ -71,12 +71,12 @@ public:
 	virtual int readMultipleBlocks(
 		uchar_t *pucUID,		// NULL表示select模式
 		uchar_t optional_flag,	// optional bit = 1, 要求返回block的安全状态
-		uchar_t ucBlkno,		// 开始block no
-		uchar_t blocknum,		// 实际读的block是：blocknum+1;
+        uchar_t ucBlkno,		// 开始block no
+        uchar_t blocknum,		// 实际读的block是：blocknum+1;
 		uchar_t buf[],			// 返回读取的数据
 		uchar_t aucSecurity[]	// 如果optional_flag = 1, 返回该block的安全状态：1表示locked.
 		)
-	{
+    {
 		t15bOption = optional_flag;
 		return readBlocks( ucBlkno, blocknum+1, buf, aucSecurity, pucUID );
 	}

@@ -2,9 +2,11 @@
 #define READERAPI_H
 
 #include <HF15693.h>
+#include <VCDOurs.h>
+
 #include <QString>
 #include <QStringList>
-#include <VCDOurs.h>
+#include <QElapsedTimer>
 
 typedef unsigned char uchar_t;
 
@@ -29,13 +31,15 @@ public:
     void setComNumber(int comNumber);
     int getComNumber();
 
+
     bool is_connected();
 
     bool connect();
+    void disconnect();
     QStringList inventory(int maxViccNum);
     bool insertRecord(QString record, QString cardId);
     bool writeRecords(QStringList recordList, QString cardId);
-    QStringList getRecords(QString cardId, bool &ok);
+    QStringList readAllRecords(QString cardId, bool &ok);
     bool initCard(QString cardId);
 };
 

@@ -118,6 +118,12 @@ void MainWindow::on_depositByCardIdButton_clicked()
         return;
     }
 
+    success = reader.insertRecord(recordId, cardId);
+    if (!success)
+    {
+        QMessageBox::warning(this, "提示", "充值成功。写卡失败。本交易不记录在卡上。");
+    }
+
     QString depositResultMessage = QString("充值成功：") + QString::number(topUpValue) + QString("元\n");
     depositResultMessage += QString("原余额：") + QString::number(originalBalance) + QString("元\n");
     depositResultMessage += QString("充值后余额：") + QString::number(finalBalance) + QString("元\n");
@@ -223,9 +229,10 @@ void MainWindow::on_depositByUserIdButton_clicked()
  * @param   finalBalance    充值后的余额，通过引用返回
  * @param   recordId        交易编号，通过引用返回
  * @param   info            如果出现异常，填入异常信息，通过引用返回
- * @return  bool            是否充值成功
- * - true   成功
- * - false  失败
+ * @return  int            是否充值成功
+ * - 0  失败
+ * - 1  成功
+ * - 2  充值成功但写卡失败
  * @details
  * 函数首先检查设备是否支持充值。如果设备不支持，函数返回失败并设置错误信息。
  * 接着，函数查询数据库获取卡片的当前状态和余额。如果卡片不存在、已挂失或未启用，函数返回失败并设置相应的错误信息。
@@ -299,8 +306,6 @@ bool MainWindow::topUpCard(QString cardId, double topUpValue, double &originalBa
     query.next();
     finalBalance = query.value("@newBalance").toDouble();
 
-    /// @todo 写卡
-
     return true;
 }
 
@@ -327,5 +332,5 @@ QString MainWindow::getRecordId(QDateTime currentTime, int userId, int recordTyp
     QString typeStr = QString::number(recordType);  // 第25位：记录类型
     QString randomHex = QString::number(QRandomGenerator::global()->bounded(0x10000), 16).rightJustified(4, '0');   // 第26-29位：随机十六进制数
     QString recordId = timeStr + userIdStr + typeStr + randomHex;   // 共30位
-    return recordId;
+    return recordId.toUpper();
 }

@@ -1,5 +1,6 @@
 #include <cstdlib>
 #include "VCDOurs.h"
+#include "qlogging.h"
 
 CVCDOurs::CVCDOurs(void)
 {
@@ -422,7 +423,7 @@ int CVCDOurs::writeBlocks( int nFirstBlock, int nBlockNum, uchar_t *pDat, uchar_
 	int k = 0;
 	for( int i = 0; i < nBlockNum; i++ )
 	{
-		k += writeBlock( nFirstBlock + i, pDat+i*8, pucUID );
+        k += writeBlock( nFirstBlock + i, pDat+i*4, pucUID );
 	}
 	return k;
 }

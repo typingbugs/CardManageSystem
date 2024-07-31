@@ -83,7 +83,6 @@ MainWindow::MainWindow(QWidget *parent)
     ui->queryResultTable->setColumnWidth(5, 240);
 
 
-
     // 设置启动页面
     ui->stackedWidget->setCurrentWidget(ui->settingPage);
 }
@@ -93,4 +92,3 @@ MainWindow::~MainWindow()
 {
     delete ui;
 }
-
