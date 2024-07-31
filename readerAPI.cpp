@@ -199,7 +199,7 @@ bool Reader::insertRecord(QString record, QString cardId)
     int recordNum, recordIndex;
     bool success = readRecordNumber(recordNum, recordIndex, cardId);
     if (!success) return false;
-    recordNum = std::min(maxRecordNum, ++recordNum);
+    recordNum = std::min(maxRecordNum, recordNum + 1);
     recordIndex = (recordIndex + 1) % maxRecordNum;
     success = writeRecordNumber(recordNum, recordIndex, cardId);
     if (!success) return false;
