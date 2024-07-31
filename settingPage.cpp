@@ -137,3 +137,19 @@ bool MainWindow::softwareReady()
     if (!device.is_verified()) return false;
     return true;
 }
+
+
+/**
+ * @brief   检查数据库是否准备好
+ * @param   void
+ * @return  数据库状态
+ *  - true  已准备好
+ *  - false 未准备好
+ * @author  柯劲帆
+ * @date    2024-07-31
+ */
+bool MainWindow::databaseReady()
+{
+    if (db == nullptr || !db->is_connected()) return false;
+    return true;
+}

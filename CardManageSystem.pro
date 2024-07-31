@@ -18,6 +18,7 @@ SOURCES += \
     main.cpp \
     mainwindow.cpp \
     newCardPage.cpp \
+    queryPage.cpp \
     quitAppPage.cpp \
     readerAPI.cpp \
     reportLossPage.cpp \

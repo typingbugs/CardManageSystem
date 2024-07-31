@@ -433,7 +433,7 @@ bool MainWindow::verifyUser(int userId, QString prompt, QString &info)
         QString validPassword = query.value(0).toString();
         if (validPassword != password)
         {
-            info = QString("密码不正确");
+            info = QString("密码不正确。");
             return false;
         }
         else
@@ -443,7 +443,7 @@ bool MainWindow::verifyUser(int userId, QString prompt, QString &info)
     }
     else
     {
-        info = QString("学/工号不存在");
+        info = QString("学/工号不存在。");
         return false;
     }
 }
