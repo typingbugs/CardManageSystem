@@ -4,9 +4,7 @@
 #include <HF15693.h>
 #include <VCDOurs.h>
 
-#include <QString>
 #include <QStringList>
-#include <QElapsedTimer>
 
 typedef unsigned char uchar_t;
 
