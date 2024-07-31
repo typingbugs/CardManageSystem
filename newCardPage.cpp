@@ -91,6 +91,12 @@ void MainWindow::on_newCardButton_clicked()
         return;
     }
 
+    if (!device.is_depositAllowed())
+    {
+        QMessageBox::warning(this, QString("提示"), QString("本设备不支持开卡。"));
+        return;
+    }
+
     if (!newCardUserIdFilled)
     {
         QMessageBox::warning(this, "提示", "请填写学/工号。");
@@ -164,7 +170,19 @@ void MainWindow::on_newCardButton_clicked()
         query.prepare("insert into card "
                       "values (:cardId, 0, 0.00, null);");
         query.bindValue(":cardId", cardIdSelected);
-        query.exec();
+        success = query.exec();
+        if (!success)
+        {
+            QMessageBox::warning(this, "提示", QString("数据库异常。开卡失败，请重试。"));
+            return;
+        }
+
+        success = reader.initCard(cardIdSelected);  // 初始化卡
+        if (!success)
+        {
+            QMessageBox::warning(this, "提示", QString("读卡器设备异常。写卡失败，请重试。"));
+            return;
+        }
     }
 
     // 检查是否是新用户
@@ -195,6 +213,14 @@ void MainWindow::on_newCardButton_clicked()
             return;
         }
         QMessageBox::information(this, "提示", "新用户开卡成功。");
+
+        success = reader.initCard(cardIdSelected);  // 初始化卡
+        if (!success)
+        {
+            QMessageBox::warning(this, "提示", QString("读卡器设备异常。写卡失败，请重试。"));
+            return;
+        }
+
         return;
     }
     else    // 库中有用户记录
@@ -221,7 +247,7 @@ void MainWindow::on_newCardButton_clicked()
             }
             else if (userCardStatus == -1)  // 用户有挂失卡，需要移资
             {
-                /// @todo 弹出验证用户界面，要求用户输入密码；将挂失卡的信息和消费记录移到新卡
+                /// @todo 弹出验证用户界面，要求用户输入密码；在数据库中将挂失卡的信息和消费记录移到新卡
                 QString info, prompt = QString("如需将挂失卡移资到本卡，请输入密码。");
                 bool success = verifyUser(userId, prompt, info);
                 if (!success)
@@ -238,6 +264,13 @@ void MainWindow::on_newCardButton_clicked()
                     return;
                 }
 
+                success = reader.initCard(cardIdSelected);  // 初始化卡
+                if (!success)
+                {
+                    QMessageBox::warning(this, "提示", QString("读卡器设备异常。写卡失败，请重试。"));
+                    return;
+                }
+
                 QMessageBox::information(this, "提示", "移资成功。");
                 return;
             }
@@ -251,6 +284,14 @@ void MainWindow::on_newCardButton_clicked()
                 QMessageBox::warning(this, "提示", info + QString("\n注册失败，请重新开卡。"));
                 return;
             }
+
+            success = reader.initCard(cardIdSelected);  // 初始化卡
+            if (!success)
+            {
+                QMessageBox::warning(this, "提示", QString("读卡器设备异常。写卡失败，请重试。"));
+                return;
+            }
+
             QMessageBox::information(this, "提示", "新用户开卡成功。");
             return;
         }

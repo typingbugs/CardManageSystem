@@ -12,7 +12,6 @@
 #include <QRandomGenerator>
 
 #include <vector>
-#include <set>
 
 #include <readerAPI.h>
 #include <databaseAPI.h>

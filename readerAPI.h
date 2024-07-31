@@ -20,6 +20,10 @@ class Reader : private CVCDOurs
 {
 private:
     int comNumber = -1; ///< 硬件连接com口号，若未连接为-1
+    int maxRecordNum = 6;   ///< 每条记录4个block，最多28-1=27个block，所以最多支持6条记录
+
+    bool readRecordNumber(int &recordNum, int &recordIndex, QString cardId);
+    bool writeRecordNumber(int recordNum, int recordIndex, QString cardId);
 
 public:
     void setComNumber(int comNumber);
@@ -29,6 +33,10 @@ public:
 
     bool connect();
     QStringList inventory(int maxViccNum);
+    bool insertRecord(QString record, QString cardId);
+    bool writeRecords(QStringList recordList, QString cardId);
+    QStringList getRecords(QString cardId, bool &ok);
+    bool initCard(QString cardId);
 };
 
 #endif // READERAPI_H
