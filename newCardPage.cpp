@@ -137,7 +137,12 @@ void MainWindow::on_newCardButton_clicked()
                           "where id = :userId");
             query.bindValue(":userId", cardUserId);
             bool success = query.exec();
-            if (!success || !query.next())
+            if (!success)
+            {
+                QMessageBox::warning(this, "提示", QString("数据库异常。\n重开卡失败，请重试。"));
+                return;
+            }
+            if (!query.next())
             {
                 QMessageBox::warning(this, "提示", QString("数据库异常。\n重开卡失败，请重试。"));
                 return;
@@ -516,10 +521,15 @@ bool MainWindow::transferCard(int userId, QString newCardId, QString oldCardId, 
     // 查询旧卡余额
     query.finish();
     query.prepare("select balance from card "
-                  "where userId = :userId;");
-    query.bindValue(":userId", oldCardId);
+                  "where id = :cardId;");
+    query.bindValue(":cardId", oldCardId);
     isExecuted = query.exec();
-    if (!isExecuted || query.next())
+    if (!isExecuted)
+    {
+        info = QString("数据库异常。");
+        return false;
+    }
+    if (!query.next())
     {
         info = QString("数据库异常。");
         return false;

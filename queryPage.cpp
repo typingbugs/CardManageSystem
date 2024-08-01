@@ -114,6 +114,11 @@ void MainWindow::on_userRecordQueryButton_clicked()
         {
             ui->queryCardStatusLabel->setText(QString("已被挂失"));
         }
+        if (cardStatus == 1)
+        {
+            ui->queryCardStatusLabel->setText(QString("启用中"));
+        }
+
         userId = query.value("userId").toInt();
         balance = query.value("balance").toDouble();
         ui->queryBalanceShowEdit->setText(QString::number(balance, 'f', 2));
@@ -336,6 +341,10 @@ void MainWindow::on_cardRecordQueryButton_clicked()
         if (cardStatus == -1)
         {
             ui->queryCardStatusLabel->setText(QString("已被挂失"));
+        }
+        if (cardStatus == 1)
+        {
+            ui->queryCardStatusLabel->setText(QString("启用中"));
         }
         balance = query.value("balance").toDouble();
         ui->queryBalanceShowEdit->setText(QString::number(balance, 'f', 2));

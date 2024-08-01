@@ -65,6 +65,14 @@ void MainWindow::on_reportLossButton_clicked()
         return;
     }
 
+    QString info, prompt = QString("如需挂失该学/工号绑定的卡，请输入密码。");
+    success = verifyUser(userId, prompt, info);
+    if (!success)
+    {
+        QMessageBox::warning(this, "提示", info + QString("\n验证用户失败。挂失失败，请重试。"));
+        return;
+    }
+
     // 将该学/工号的卡设置为挂失状态
     query.prepare(QString("update card "
                           "set `status` = -1 "
