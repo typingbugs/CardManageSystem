@@ -10,7 +10,7 @@
 
 ### 1.2.1 系统架构
 
- ![architecture](image\architecture.svg)
+ ![architecture](image/architecture.svg)
 
 本系统由一卡通管理系统软件、数据库以及读卡器硬件组成。
 
@@ -69,7 +69,7 @@
 
 首先获取 COM 口输入框组件的 COM 口号，调用读卡器 API 进行连接，得到连接结果。如果连接不成功，弹出提示框。最后根据连接结果更新状态栏信息。
 
-![setting-setReader](image\setting-setReader.svg)
+![setting-setReader](image/setting-setReader.svg)
 
 ### 2.1.2 设置数据库连接
 
@@ -102,7 +102,7 @@
 
 查询数据库进行设备名认证，按认证结果更新任务栏显示信息。如果认证不成功，还要弹出提示框。
 
-![setting-setDatabase](image\setting-setDatabase.svg)
+![setting-setDatabase](image/setting-setDatabase.svg)
 
 以下功能中，除了仅需输学/工号的功能仅需连接数据库外，其他所有功能都需同时连接读卡器和数据库。
 
@@ -213,7 +213,7 @@
 
 整个开卡功能的流程图如下：
 
-![newCard](image\newCard.svg)
+![newCard](image/newCard.svg)
 
 其中绿色部分对应新用户开卡功能，橙色部分对应重开卡部分，蓝色部分对应挂失卡移资部分。
 
@@ -250,7 +250,7 @@
 > - 第 5 - 15 位：学/工号，将学/工号（十进制）的每一位数字依次填入（不转换为十六进制）；
 > - 第 16 - 29 位：时间，从高到低分别是 yyyyMMddhhmmss ；
 
-![deposit-useId](image\deposit-useId.svg)
+![deposit-useId](image/deposit-useId.svg)
 
 ### 2.3.2 线下充值
 
@@ -272,7 +272,7 @@
 
 生成交易号，将交易记录插入数据库，将交易号写入卡中。
 
-![deposit-useCard](image\deposit-useCard.svg)
+![deposit-useCard](image/deposit-useCard.svg)
 
 ## 2.4 消费功能
 
@@ -300,7 +300,7 @@
 
 生成交易号，将交易记录插入数据库，将交易号写入卡中。
 
-![consume](image\consume.svg)
+![consume](image/consume.svg)
 
 ## 2.5 查询功能
 
@@ -324,7 +324,7 @@
 
 调用读卡器 API 读取卡内的交易编号，对每一条交易编号，查询数据库中的交易记录，并显示在表格组件中。
 
-![query-inCard](image\query-inCard.svg)
+![query-inCard](image/query-inCard.svg)
 
 ### 2.5.2 查询所有记录
 
@@ -349,7 +349,7 @@
 
 查询该用户在数据库内的所有交易记录，并显示在表格组件中。
 
-![query-all](image\query-all.svg)
+![query-all](image/query-all.svg)
 
 ## 2.6 挂失功能
 
@@ -371,7 +371,7 @@
 
 修改数据库，将学/工号绑定的卡设置为挂失状态。
 
-![reportLoss](image\reportLoss.svg)
+![reportLoss](image/reportLoss.svg)
 
 ## 2.7 退出功能
 
@@ -383,7 +383,7 @@
 
 程序关闭读卡器连接和数据库连接，最后关闭图形化界面后退出。
 
-![quitApp](image\quitApp.svg)
+![quitApp](image/quitApp.svg)
 
 
 
@@ -402,7 +402,7 @@
 
 实体-关系图如下：
 
-![ER](image\ER.svg)
+![ER](image/ER.svg)
 
 因此在数据库中建立表：
 
@@ -421,7 +421,7 @@
   - 名称必须互不相同
   - 充值权限必须为 0 或 1 （分别表示仅可消费、可充值）
 
-数据库初始化脚本见 [initDb.sql](..\database\initDb.sql) 。
+数据库初始化脚本见 [initDb.sql](../database/initDb.sql) 。
 
 本软件使用数据库固定使用 `cardManageSystem` 数据库和 `cardManageSystem` 用户。
 
@@ -431,7 +431,7 @@
 
 由于本软件是基于 QT 的一个 MainWindow 组件类对象搭建，各个子界面都是 MainWindow 的子组件，因此所有的全局变量都被设置为 MainWindow 对象的属性，包括：
 
-- reader：自定义 Reader 类（定义在 [readerAPI.h](..\readerAPI.h) 中）对象：
+- reader：自定义 Reader 类（定义在 [readerAPI.h](../readerAPI.h) 中）对象：
   - 变量： COM 口号和卡内最大的记录条数限制
   - 方法：
     - `void setComNumber(int comNumber)` 设置 COM 口号
@@ -443,7 +443,7 @@
     - `bool insertRecord(QString record, QString cardId)` 插入一条交易记录
     - `QStringList readAllRecords(QString cardId, bool &ok)` 获取全部记录
     - `bool initCard(QString cardId)`卡初始化
-- db：自定义 Database 类（定义在 [databaseAPI.h](..\databaseAPI.h) 中）指针：
+- db：自定义 Database 类（定义在 [databaseAPI.h](../databaseAPI.h) 中）指针：
   - 变量：QT 的数据库对象、连接状态、固定的数据库名字符串和用户名字符串
   - 方法：
     - `Database(QSqlDatabase database)` 使用QSqlDatabase类初始化对象
@@ -456,7 +456,7 @@
     - `QString getHostName()` 获取hostName属性
     - `bool is_connected()` 数据库是否已经连接
     - `bool open()` 连接数据库
-- device：自定义 Device 类（定义在 [deviceAPI.h](..\deviceAPI.h) 中）对象：
+- device：自定义 Device 类（定义在 [deviceAPI.h](../deviceAPI.h) 中）对象：
   - 变量：设备名认证状态、设备充值权限、设备名称和设备编号
   - 方法：
     - `void setDevice(QString name, Database *db)` 设置并认证设备
@@ -471,7 +471,7 @@
 
 本系统中，交易记录主要存储在数据库中。交易记录作为变量出现在软件中的场景，是查询数据库得到某个用户的交易记录，显示在表格组件中。因此交易记录被定义为 QStringList 类对象（即 QString 类列表）。
 
-使用 QSqlQuery 类方法查询到交易记录后，交易记录使用 QSqlQuery 类对象 query 的方法 value() 获取各个字段的值。获取后，将其转换为 QStringList 类对象，即可调用表格组件方法显示。该功能在 [queryPage.cpp](..\queryPage.cpp) 的 MainWindow::transactionRecord2QStringList() 方法中实现。
+使用 QSqlQuery 类方法查询到交易记录后，交易记录使用 QSqlQuery 类对象 query 的方法 value() 获取各个字段的值。获取后，将其转换为 QStringList 类对象，即可调用表格组件方法显示。该功能在 [queryPage.cpp](../queryPage.cpp) 的 MainWindow::transactionRecord2QStringList() 方法中实现。
 
 
 
