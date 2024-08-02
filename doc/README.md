@@ -10,7 +10,7 @@
 
 ### 1.2.1 系统架构
 
- ![architecture.drawio](image\architecture.drawio.svg)
+ ![architecture](image\architecture.svg)
 
 本系统由一卡通管理系统软件、数据库以及读卡器硬件组成。
 
@@ -69,7 +69,7 @@
 
 首先获取 COM 口输入框组件的 COM 口号，调用读卡器 API 进行连接，得到连接结果。如果连接不成功，弹出提示框。最后根据连接结果更新状态栏信息。
 
-![setting-setReader.drawio](image\setting-setReader.drawio.svg)
+![setting-setReader](image\setting-setReader.svg)
 
 ### 2.1.2 设置数据库连接
 
@@ -102,7 +102,7 @@
 
 查询数据库进行设备名认证，按认证结果更新任务栏显示信息。如果认证不成功，还要弹出提示框。
 
-![setting-setDatabase.drawio](image\setting-setDatabase.drawio.svg)
+![setting-setDatabase](image\setting-setDatabase.svg)
 
 以下功能中，除了仅需输学/工号的功能仅需连接数据库外，其他所有功能都需同时连接读卡器和数据库。
 
@@ -213,7 +213,7 @@
 
 整个开卡功能的流程图如下：
 
-![newCard.drawio](image\newCard.drawio.svg)
+![newCard](image\newCard.svg)
 
 其中绿色部分对应新用户开卡功能，橙色部分对应重开卡部分，蓝色部分对应挂失卡移资部分。
 
@@ -250,7 +250,7 @@
 > - 第 5 - 15 位：学/工号，将学/工号（十进制）的每一位数字依次填入（不转换为十六进制）；
 > - 第 16 - 29 位：时间，从高到低分别是 yyyyMMddhhmmss ；
 
-![deposit-useId.drawio](image\deposit-useId.drawio.svg)
+![deposit-useId](image\deposit-useId.svg)
 
 ### 2.3.2 线下充值
 
@@ -272,7 +272,7 @@
 
 生成交易号，将交易记录插入数据库，将交易号写入卡中。
 
-![deposit-useCard.drawio](image\deposit-useCard.drawio.svg)
+![deposit-useCard](image\deposit-useCard.svg)
 
 ## 2.4 消费功能
 
@@ -300,7 +300,7 @@
 
 生成交易号，将交易记录插入数据库，将交易号写入卡中。
 
-![consume.drawio](image\consume.drawio.svg)
+![consume](image\consume.svg)
 
 ## 2.5 查询功能
 
@@ -324,7 +324,7 @@
 
 调用读卡器 API 读取卡内的交易编号，对每一条交易编号，查询数据库中的交易记录，并显示在表格组件中。
 
-![query-inCard.drawio](image\query-inCard.drawio.svg)
+![query-inCard](image\query-inCard.svg)
 
 ### 2.5.2 查询所有记录
 
@@ -349,7 +349,7 @@
 
 查询该用户在数据库内的所有交易记录，并显示在表格组件中。
 
-![query-all.drawio](image\query-all.drawio.svg)
+![query-all](image\query-all.svg)
 
 ## 2.6 挂失功能
 
@@ -371,7 +371,7 @@
 
 修改数据库，将学/工号绑定的卡设置为挂失状态。
 
-![reportLoss.drawio](image\reportLoss.drawio.svg)
+![reportLoss](image\reportLoss.svg)
 
 ## 2.7 退出功能
 
@@ -383,7 +383,7 @@
 
 程序关闭读卡器连接和数据库连接，最后关闭图形化界面后退出。
 
-![quitApp.drawio](image\quitApp.drawio.svg)
+![quitApp](image\quitApp.svg)
 
 
 
@@ -402,7 +402,7 @@
 
 实体-关系图如下：
 
-![ER.drawio](image\ER.drawio.svg)
+![ER](image\ER.svg)
 
 因此在数据库中建立表：
 
