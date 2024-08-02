@@ -378,9 +378,7 @@ void MainWindow::on_cardRecordQueryButton_clicked()
 
     query.finish();
     query.prepare(QString("select time, type, value, balance, device, id from record_view "
-                          "where cardId = :cardId and id = :recordId;"));
-    query.bindValue(":cardId", cardId);
-
+                          "where id = :recordId;"));
 
     std::vector<QStringList> transactionRecordList;
     for (int i = 0; i < cardRecordIdList.size(); i++)

@@ -248,13 +248,14 @@ QStringList Reader::readAllRecords(QString cardId, bool &ok)
 {
     QStringList recordList;
 
-    int recordNum, recordStartIndex;
-    bool success = readRecordNumber(recordNum, recordStartIndex, cardId);
+    int recordNum, recordIndex;
+    bool success = readRecordNumber(recordNum, recordIndex, cardId);
     if (!success)
     {
         ok = false;
         return recordList;
     }
+    int recordStartIndex = ((recordIndex - recordNum + 1) % maxRecordNum + maxRecordNum) % maxRecordNum;
 
     uchar_t cardIdHex[8] = {0};
     StringToHex(cardId.toLatin1().data(), cardIdHex);

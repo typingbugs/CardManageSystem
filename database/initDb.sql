@@ -13,7 +13,8 @@ DROP PROCEDURE IF EXISTS sp_consumeCard;
 CREATE TABLE device (
     id INT AUTO_INCREMENT PRIMARY KEY,
     `name` VARCHAR(255) UNIQUE,
-    depositAllowed TINYINT NOT NULL
+    depositAllowed TINYINT NOT NULL,
+    CONSTRAINT chk_device_depositAllowed CHECK (depositAllowed IN (0, 1))
 ) AUTO_INCREMENT=1000;
 
 CREATE TABLE `user` (
@@ -28,24 +29,26 @@ CREATE TABLE card (
     balance DECIMAL(6, 2) NOT NULL,
     userId INT,
     FOREIGN KEY (userId) REFERENCES `user`(id),
+    CONSTRAINT chk_card_status CHECK (`status` IN (-1, 0, 1)),
     CONSTRAINT chk_card_balance CHECK (balance >= 0)
 );
 
 CREATE TABLE record (
     id VARCHAR(255) PRIMARY KEY,
-    cardId VARCHAR(16),
+    cardId VARCHAR(16) NOT NULL,
     `time` DATETIME NOT NULL,
     `type` TINYINT NOT NULL,
     `value` DECIMAL(6, 2) NOT NULL,
     originalBalance DECIMAL(6, 2) NOT NULL,
     balance DECIMAL(6, 2) NOT NULL,
-    deviceId INT,
+    deviceId INT NOT NULL,
     FOREIGN KEY (cardId) REFERENCES card(id),
     FOREIGN KEY (deviceId) REFERENCES device(id),
     CONSTRAINT chk_value CHECK (`value` >= -300),
     CONSTRAINT chk_record CHECK (originalBalance + `value` = balance),
     CONSTRAINT chk_record_originalBalance CHECK (originalBalance >= 0),
-    CONSTRAINT chk_record_balance CHECK (balance >= 0)
+    CONSTRAINT chk_record_balance CHECK (balance >= 0),
+    CONSTRAINT chk_record_type CHECK (`type` IN (0, 1))
 );
 
 

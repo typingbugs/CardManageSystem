@@ -80,8 +80,6 @@ private:
     Device device;
 
     QStatusBar *statusBar;
-    QStackedWidget *stackedWidget;
-
     QCheckBox *readerConnectStatusCheckBox;
     QLabel *comNumberLabel;
     QCheckBox *databaseConnectStatusCheckBox;

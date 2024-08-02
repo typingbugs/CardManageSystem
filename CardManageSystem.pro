@@ -51,8 +51,10 @@ DISTFILES += \
     HF15693.dll \
     HF15693.lib
 
+# LIBS += -L$$PWD/. -LHF15693
+
 win32:CONFIG(release, debug|release): LIBS += -L$$PWD/../release/ -lHF15693
 else:win32:CONFIG(debug, debug|release): LIBS += -L$$PWD/../debug/ -lHF15693
-else:unix: LIBS += -L$$PWD/../ -lHF15693
 
-LIBS += -L. -lHF15693
+INCLUDEPATH += $$PWD/.
+DEPENDPATH += $$PWD/.

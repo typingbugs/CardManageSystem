@@ -50,7 +50,7 @@ void MainWindow::on_reportLossButton_clicked()
 
     // 查询学/工号是否存在
     QSqlQuery query(db->getDatabase());
-    query.prepare(QString("select id from card "
+    query.prepare(QString("select `status` from card "
                           "where userId = :userId;"));
     query.bindValue(":userId", userId);
     bool success = query.exec();
@@ -62,6 +62,12 @@ void MainWindow::on_reportLossButton_clicked()
     if (!query.next())
     {
         QMessageBox::warning(this, "提示", "学/工号不存在，挂失失败。");
+        return;
+    }
+    int cardStatus = query.value("status").toInt();
+    if (cardStatus == -1)
+    {
+        QMessageBox::warning(this, "提示", "该卡已挂失，不可重复挂失。");
         return;
     }
 

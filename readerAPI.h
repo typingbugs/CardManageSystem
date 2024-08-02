@@ -36,7 +36,6 @@ public:
     void disconnect();
     QStringList inventory(int maxViccNum);
     bool insertRecord(QString record, QString cardId);
-    bool writeRecords(QStringList recordList, QString cardId);
     QStringList readAllRecords(QString cardId, bool &ok);
     bool initCard(QString cardId);
 };
