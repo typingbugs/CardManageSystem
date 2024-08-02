@@ -10,7 +10,7 @@
 
 ### 1.2.1 系统架构
 
- ![architecture](image/architecture.svg)
+ <img src="image/architecture.svg" alt="architecture" style="zoom:50%;" />
 
 本系统由一卡通管理系统软件、数据库以及读卡器硬件组成。
 
@@ -69,7 +69,7 @@
 
 首先获取 COM 口输入框组件的 COM 口号，调用读卡器 API 进行连接，得到连接结果。如果连接不成功，弹出提示框。最后根据连接结果更新状态栏信息。
 
-![setting-setReader](image/setting-setReader.svg)
+<img src="image/setting-setReader.svg" alt="setting-setReader" style="zoom:50%;" />
 
 ### 2.1.2 设置数据库连接
 
@@ -102,7 +102,7 @@
 
 查询数据库进行设备名认证，按认证结果更新任务栏显示信息。如果认证不成功，还要弹出提示框。
 
-![setting-setDatabase](image/setting-setDatabase.svg)
+<img src="image/setting-setDatabase.svg" alt="setting-setDatabase" style="zoom:50%;" />
 
 以下功能中，除了仅需输学/工号的功能仅需连接数据库外，其他所有功能都需同时连接读卡器和数据库。
 
@@ -213,7 +213,7 @@
 
 整个开卡功能的流程图如下：
 
-![newCard](image/newCard.svg)
+<img src="image/newCard.svg" alt="newCard" style="zoom:50%;" />
 
 其中绿色部分对应新用户开卡功能，橙色部分对应重开卡部分，蓝色部分对应挂失卡移资部分。
 
@@ -250,7 +250,7 @@
 > - 第 5 - 15 位：学/工号，将学/工号（十进制）的每一位数字依次填入（不转换为十六进制）；
 > - 第 16 - 29 位：时间，从高到低分别是 yyyyMMddhhmmss ；
 
-![deposit-useId](image/deposit-useId.svg)
+<img src="image/deposit-useId.svg" alt="deposit-useId" style="zoom:50%;" />
 
 ### 2.3.2 线下充值
 
@@ -272,7 +272,7 @@
 
 生成交易号，将交易记录插入数据库，将交易号写入卡中。
 
-![deposit-useCard](image/deposit-useCard.svg)
+<img src="image/deposit-useCard.svg" alt="deposit-useCard" style="zoom:50%;" />
 
 ## 2.4 消费功能
 
@@ -300,7 +300,7 @@
 
 生成交易号，将交易记录插入数据库，将交易号写入卡中。
 
-![consume](image/consume.svg)
+<img src="image/consume.svg" alt="consume" style="zoom:50%;" />
 
 ## 2.5 查询功能
 
@@ -324,7 +324,7 @@
 
 调用读卡器 API 读取卡内的交易编号，对每一条交易编号，查询数据库中的交易记录，并显示在表格组件中。
 
-![query-inCard](image/query-inCard.svg)
+<img src="image/query-inCard.svg" alt="query-inCard" style="zoom:50%;" />
 
 ### 2.5.2 查询所有记录
 
@@ -349,7 +349,7 @@
 
 查询该用户在数据库内的所有交易记录，并显示在表格组件中。
 
-![query-all](image/query-all.svg)
+<img src="image/query-all.svg" alt="query-all" style="zoom:50%;" />
 
 ## 2.6 挂失功能
 
@@ -371,7 +371,7 @@
 
 修改数据库，将学/工号绑定的卡设置为挂失状态。
 
-![reportLoss](image/reportLoss.svg)
+<img src="image/reportLoss.svg" alt="reportLoss" style="zoom:50%;" />
 
 ## 2.7 退出功能
 
@@ -383,7 +383,7 @@
 
 程序关闭读卡器连接和数据库连接，最后关闭图形化界面后退出。
 
-![quitApp](image/quitApp.svg)
+<img src="image/quitApp.svg" alt="quitApp" style="zoom:50%;" />
 
 
 
@@ -402,7 +402,7 @@
 
 实体-关系图如下：
 
-![ER](image/ER.svg)
+<img src="image/ER.svg" alt="ER" style="zoom:50%;" />
 
 因此在数据库中建立表：
 
